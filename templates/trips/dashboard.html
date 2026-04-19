@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Мои поездки — TripPlanner{% endblock %}
 
@@ -29,14 +29,14 @@
                     <article class="trip-card h-100">
                         <div class="d-flex justify-content-between gap-2 mb-2">
                             <span class="badge text-bg-light">{{ trip.destination }}</span>
-                            <span class="small text-muted">{{ trip.duration_days }} дн.</span>
+                            <span class="small text-muted">{{ trip.days }} дн.</span>
                         </div>
                         <h2 class="h5">{{ trip.title }}</h2>
                         <p class="text-muted small mb-3">
                             {{ trip.start_date.strftime('%d.%m.%Y') }} — {{ trip.end_date.strftime('%d.%m.%Y') }}
                         </p>
-                        <div class="progress mb-3" role="progressbar" aria-valuenow="{{ trip.progress_percent }}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{ trip.progress_percent }}%">{{ trip.progress_percent }}%</div>
+                        <div class="progress mb-3" role="progressbar" aria-valuenow="{{ trip.progress }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{ trip.progress }}%">{{ trip.progress }}%</div>
                         </div>
                         <div class="d-flex justify-content-between small text-muted mb-3">
                             <span>{{ trip.notes|length }} заметок</span>
@@ -48,7 +48,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="empty-state">
+        <div class="empty">
             <h2 class="h4">Пока нет поездок</h2>
             <p class="text-muted">Создайте первую поездку и добавьте к ней чек-лист, документы и заметки.</p>
             <a class="btn btn-primary" href="{{ url_for('trips.create') }}">Создать поездку</a>

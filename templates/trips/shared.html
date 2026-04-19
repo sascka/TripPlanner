@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Общий доступ — {{ trip.title }}{% endblock %}
 
 {% block content %}
 <section class="container py-4">
-    <div class="shared-banner mb-4">
+    <div class="share-box mb-4">
         <p class="text-uppercase text-teal fw-semibold mb-1">Общий доступ</p>
         <h1 class="h2">{{ trip.title }}</h1>
         <p class="mb-0">
@@ -38,7 +38,7 @@
             <div class="surface">
                 <h2 class="h5">Погода</h2>
                 {% if weather.ok %}
-                    <p class="weather-temp mb-1">{{ weather.temperature }} °C</p>
+                    <p class="temp mb-1">{{ weather.temperature }} °C</p>
                     <p class="mb-0">{{ weather.description }}</p>
                 {% else %}
                     <p class="text-muted mb-0">{{ weather.message }}</p>

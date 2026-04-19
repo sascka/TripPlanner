@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}TripPlanner — умный путешественник{% endblock %}
 
@@ -18,16 +18,16 @@
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="route-preview">
-                    <div class="route-preview__header">
+                <div class="route-box">
+                    <div class="route-head">
                         <span>Новосибирск → Казань</span>
                         <strong>5 дней</strong>
                     </div>
-                    <div class="route-preview__line"></div>
-                    <div class="route-preview__item done">Билеты загружены</div>
-                    <div class="route-preview__item done">Отель подтверждён</div>
-                    <div class="route-preview__item">Проверить погоду</div>
-                    <div class="route-preview__weather">+18 °C, ясно</div>
+                    <div class="route-line"></div>
+                    <div class="route-item done">Билеты загружены</div>
+                    <div class="route-item done">Отель подтверждён</div>
+                    <div class="route-item">Проверить погоду</div>
+                    <div class="route-weather">+18 °C, ясно</div>
                 </div>
             </div>
         </div>
@@ -37,19 +37,19 @@
 <section class="container py-5">
     <div class="row g-3">
         <div class="col-md-4">
-            <div class="feature-tile">
+            <div class="feat">
                 <h2 class="h5">Маршруты</h2>
                 <p>Даты, бюджет, описание и общий прогресс подготовки поездки.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="feature-tile">
+            <div class="feat">
                 <h2 class="h5">Документы</h2>
                 <p>PDF, PNG и JPG с билетами, бронями и важными сканами.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="feature-tile">
+            <div class="feat">
                 <h2 class="h5">Погода</h2>
                 <p>Актуальная сводка через OpenWeatherMap для города поездки.</p>
             </div>

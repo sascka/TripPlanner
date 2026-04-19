@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}{{ trip.title }} — TripPlanner{% endblock %}
 
 {% block content %}
-<section class="trip-heading py-4">
+<section class="trip-head py-4">
     <div class="container">
         <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
             <div>
@@ -11,7 +11,7 @@
                 <h1 class="display-6 fw-bold mb-2">{{ trip.title }}</h1>
                 <p class="mb-0 text-muted">
                     {{ trip.start_date.strftime('%d.%m.%Y') }} — {{ trip.end_date.strftime('%d.%m.%Y') }},
-                    {{ trip.duration_days }} дн., бюджет {{ trip.budget }} руб.
+                    {{ trip.days }} дн., бюджет {{ trip.budget }} руб.
                 </p>
             </div>
             <div class="d-flex flex-wrap gap-2 align-content-start">
@@ -36,17 +36,17 @@
             <div class="surface mb-4">
                 <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
                     <h2 class="h4 mb-0">Чек-лист</h2>
-                    <span class="badge text-bg-info">{{ trip.progress_percent }}%</span>
+                    <span class="badge text-bg-info">{{ trip.progress }}%</span>
                 </div>
                 <div class="progress mb-3" role="progressbar">
-                    <div class="progress-bar" style="width: {{ trip.progress_percent }}%"></div>
+                    <div class="progress-bar" style="width: {{ trip.progress }}%"></div>
                 </div>
                 <form class="d-flex gap-2 mb-3" method="post" action="{{ url_for('trips.add_checklist_item', trip_id=trip.id) }}">
                     <input class="form-control" name="text" placeholder="Например: распечатать страховку" required>
                     <button class="btn btn-primary" type="submit">Добавить</button>
                 </form>
                 {% if trip.checklist_items %}
-                    <div class="list-group checklist-list">
+                    <div class="list-group checks">
                         {% for item in trip.checklist_items %}
                             <div class="list-group-item d-flex justify-content-between align-items-center gap-2">
                                 <form method="post" action="{{ url_for('trips.toggle_checklist_item', item_id=item.id) }}">
@@ -106,7 +106,7 @@
                 <h2 class="h5">Погода</h2>
                 <div id="weather-box" data-city="{{ trip.destination }}">
                     {% if weather.ok %}
-                        <p class="weather-temp mb-1">{{ weather.temperature }} °C</p>
+                        <p class="temp mb-1">{{ weather.temperature }} °C</p>
                         <p class="mb-1">{{ weather.description }}</p>
                         <p class="small text-muted mb-0">Ощущается как {{ weather.feels_like }} °C, ветер {{ weather.wind_speed }} м/с</p>
                     {% else %}
@@ -124,9 +124,9 @@
                 </form>
                 {% if trip.documents %}
                     <hr>
-                    <div class="document-list">
+                    <div class="docs">
                         {% for document in trip.documents %}
-                            <div class="document-row">
+                            <div class="doc-row">
                                 <a href="{{ url_for('trips.download_document', document_id=document.id) }}">{{ document.original_name }}</a>
                                 <form method="post" action="{{ url_for('trips.delete_document', document_id=document.id) }}">
                                     <button class="btn btn-sm btn-outline-danger" type="submit">x</button>

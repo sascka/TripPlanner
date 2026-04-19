@@ -9,10 +9,10 @@ from app.extensions import db
 
 class TestConfig(Config):
     TESTING = True
-    SECRET_KEY = "test-secret"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    UPLOAD_FOLDER = Path(tempfile.gettempdir()) / "tripplanner-tests"
-    WEATHER_API_KEY = ""
+    SECRET_KEY = 'test-secret'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    UPLOAD_FOLDER = Path(tempfile.gettempdir()) / 'tripplanner-tests'
+    WEATHER_API_KEY = ''
 
 
 class TripPlannerSmokeTest(unittest.TestCase):
@@ -29,42 +29,42 @@ class TripPlannerSmokeTest(unittest.TestCase):
             db.engine.dispose()
 
     def test_guest_pages_open(self):
-        self.assertEqual(self.client.get("/").status_code, 200)
-        self.assertEqual(self.client.get("/auth/login").status_code, 200)
-        self.assertEqual(self.client.get("/auth/register").status_code, 200)
+        self.assertEqual(self.client.get('/').status_code, 200)
+        self.assertEqual(self.client.get('/auth/login').status_code, 200)
+        self.assertEqual(self.client.get('/auth/register').status_code, 200)
 
-    def test_user_can_create_trip(self):
-        register_response = self.client.post(
-            "/auth/register",
+    def test_user_create_trip(self):
+        reg = self.client.post(
+            '/auth/register',
             data={
-                "name": "Test User",
-                "email": "test@example.com",
-                "password": "secret123",
-                "password_repeat": "secret123",
+                'name': 'Test User',
+                'email': 'test@example.com',
+                'password': 'secret123',
+                'pwd2': 'secret123',
             },
             follow_redirects=True,
         )
-        self.assertIn("Мои поездки".encode("utf-8"), register_response.data)
+        self.assertIn('Мои поездки'.encode('utf-8'), reg.data)
 
-        create_response = self.client.post(
-            "/trips/new",
+        res = self.client.post(
+            '/trips/new',
             data={
-                "title": "Весенняя Казань",
-                "destination": "Казань",
-                "start_date": "2026-05-10",
-                "end_date": "2026-05-14",
-                "budget": "25000",
-                "description": "Проверить прогулочный маршрут.",
+                'title': 'Весенняя Казань',
+                'destination': 'Казань',
+                'start_date': '2026-05-10',
+                'end_date': '2026-05-14',
+                'budget': '25000',
+                'description': 'Проверить прогулочный маршрут.',
             },
             follow_redirects=True,
         )
-        self.assertEqual(create_response.status_code, 200)
-        self.assertIn("Весенняя Казань".encode("utf-8"), create_response.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('Весенняя Казань'.encode('utf-8'), res.data)
 
-        api_response = self.client.get("/api/trips")
-        self.assertEqual(api_response.status_code, 200)
-        self.assertEqual(api_response.json[0]["destination"], "Казань")
+        api = self.client.get('/api/trips')
+        self.assertEqual(api.status_code, 200)
+        self.assertEqual(api.json[0]['destination'], 'Казань')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
