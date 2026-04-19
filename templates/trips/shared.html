@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Общий доступ — {{ trip.title }}{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+    <div class="shared-banner mb-4">
+        <p class="text-uppercase text-teal fw-semibold mb-1">Общий доступ</p>
+        <h1 class="h2">{{ trip.title }}</h1>
+        <p class="mb-0">
+            {{ trip.destination }},
+            {{ trip.start_date.strftime('%d.%m.%Y') }} — {{ trip.end_date.strftime('%d.%m.%Y') }}
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="surface mb-4">
+                <h2 class="h4">Описание</h2>
+                <p class="mb-0">{{ trip.description or 'Описание пока не добавлено.' }}</p>
+            </div>
+            <div class="surface">
+                <h2 class="h4">Чек-лист</h2>
+                {% if trip.checklist_items %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in trip.checklist_items %}
+                            <li class="list-group-item px-0">
+                                {% if item.is_done %}✓{% else %}○{% endif %} {{ item.text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted mb-0">Чек-лист пока пуст.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="surface">
+                <h2 class="h5">Погода</h2>
+                {% if weather.ok %}
+                    <p class="weather-temp mb-1">{{ weather.temperature }} °C</p>
+                    <p class="mb-0">{{ weather.description }}</p>
+                {% else %}
+                    <p class="text-muted mb-0">{{ weather.message }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

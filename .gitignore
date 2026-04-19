@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.env
+.venv/
+venv/
+instance/*.sqlite3
+uploads/*
+!uploads/.gitkeep
+.idea/
+.vscode/
+.pytest_cache/
+.DS_Store

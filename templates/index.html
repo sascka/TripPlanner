@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}TripPlanner — умный путешественник{% endblock %}
+
+{% block content %}
+<section class="intro-band">
+    <div class="container py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <p class="text-uppercase text-teal fw-semibold mb-2">Умный путешественник</p>
+                <h1 class="display-5 fw-bold mb-3">Соберите поездку, документы и погоду в одном месте.</h1>
+                <p class="lead text-muted mb-4">
+                    Планируйте маршрут, отмечайте подготовку, храните брони и делитесь поездкой с другом по ссылке.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}">Начать планирование</a>
+                    <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.login') }}">У меня уже есть аккаунт</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="route-preview">
+                    <div class="route-preview__header">
+                        <span>Новосибирск → Казань</span>
+                        <strong>5 дней</strong>
+                    </div>
+                    <div class="route-preview__line"></div>
+                    <div class="route-preview__item done">Билеты загружены</div>
+                    <div class="route-preview__item done">Отель подтверждён</div>
+                    <div class="route-preview__item">Проверить погоду</div>
+                    <div class="route-preview__weather">+18 °C, ясно</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="feature-tile">
+                <h2 class="h5">Маршруты</h2>
+                <p>Даты, бюджет, описание и общий прогресс подготовки поездки.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-tile">
+                <h2 class="h5">Документы</h2>
+                <p>PDF, PNG и JPG с билетами, бронями и важными сканами.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-tile">
+                <h2 class="h5">Погода</h2>
+                <p>Актуальная сводка через OpenWeatherMap для города поездки.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

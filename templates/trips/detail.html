@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trip.title }} — TripPlanner{% endblock %}
+
+{% block content %}
+<section class="trip-heading py-4">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+            <div>
+                <p class="text-uppercase text-teal fw-semibold mb-1">{{ trip.destination }}</p>
+                <h1 class="display-6 fw-bold mb-2">{{ trip.title }}</h1>
+                <p class="mb-0 text-muted">
+                    {{ trip.start_date.strftime('%d.%m.%Y') }} — {{ trip.end_date.strftime('%d.%m.%Y') }},
+                    {{ trip.duration_days }} дн., бюджет {{ trip.budget }} руб.
+                </p>
+            </div>
+            <div class="d-flex flex-wrap gap-2 align-content-start">
+                <a class="btn btn-outline-secondary" href="{{ url_for('trips.edit', trip_id=trip.id) }}">Редактировать</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('trips.report', trip_id=trip.id) }}">PDF-отчёт</a>
+                <form method="post" action="{{ url_for('trips.delete_trip', trip_id=trip.id) }}" onsubmit="return confirm('Удалить поездку?')">
+                    <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="surface mb-4">
+                <h2 class="h4">Описание</h2>
+                <p class="mb-0">{{ trip.description or 'Добавьте описание маршрута, планы на день и важные детали.' }}</p>
+            </div>
+
+            <div class="surface mb-4">
+                <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+                    <h2 class="h4 mb-0">Чек-лист</h2>
+                    <span class="badge text-bg-info">{{ trip.progress_percent }}%</span>
+                </div>
+                <div class="progress mb-3" role="progressbar">
+                    <div class="progress-bar" style="width: {{ trip.progress_percent }}%"></div>
+                </div>
+                <form class="d-flex gap-2 mb-3" method="post" action="{{ url_for('trips.add_checklist_item', trip_id=trip.id) }}">
+                    <input class="form-control" name="text" placeholder="Например: распечатать страховку" required>
+                    <button class="btn btn-primary" type="submit">Добавить</button>
+                </form>
+                {% if trip.checklist_items %}
+                    <div class="list-group checklist-list">
+                        {% for item in trip.checklist_items %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                                <form method="post" action="{{ url_for('trips.toggle_checklist_item', item_id=item.id) }}">
+                                    <button class="btn btn-sm {% if item.is_done %}btn-success{% else %}btn-outline-secondary{% endif %}" type="submit">
+                                        {% if item.is_done %}Готово{% else %}Сделать{% endif %}
+                                    </button>
+                                </form>
+                                <span class="flex-grow-1 {% if item.is_done %}text-decoration-line-through text-muted{% endif %}">{{ item.text }}</span>
+                                <form method="post" action="{{ url_for('trips.delete_checklist_item', item_id=item.id) }}">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Пока нет пунктов подготовки.</p>
+                {% endif %}
+            </div>
+
+            <div class="surface">
+                <h2 class="h4 mb-3">Заметки</h2>
+                <form class="row g-2 mb-3" method="post" action="{{ url_for('trips.add_note', trip_id=trip.id) }}">
+                    <div class="col-md-4">
+                        <input class="form-control" name="title" placeholder="Заголовок">
+                    </div>
+                    <div class="col-md-6">
+                        <input class="form-control" name="content" placeholder="Текст заметки" required>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                    </div>
+                </form>
+                {% if trip.notes %}
+                    <div class="row g-2">
+                        {% for note in trip.notes %}
+                            <div class="col-md-6">
+                                <article class="note-tile">
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <h3 class="h6">{{ note.title }}</h3>
+                                        <form method="post" action="{{ url_for('trips.delete_note', note_id=note.id) }}">
+                                            <button class="btn btn-sm btn-link text-danger p-0" type="submit">Удалить</button>
+                                        </form>
+                                    </div>
+                                    <p class="mb-0 small">{{ note.content }}</p>
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Заметки помогут не забыть адреса, время заселения и планы.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <aside class="surface mb-4">
+                <h2 class="h5">Погода</h2>
+                <div id="weather-box" data-city="{{ trip.destination }}">
+                    {% if weather.ok %}
+                        <p class="weather-temp mb-1">{{ weather.temperature }} °C</p>
+                        <p class="mb-1">{{ weather.description }}</p>
+                        <p class="small text-muted mb-0">Ощущается как {{ weather.feels_like }} °C, ветер {{ weather.wind_speed }} м/с</p>
+                    {% else %}
+                        <p class="text-muted mb-0">{{ weather.message }}</p>
+                    {% endif %}
+                </div>
+                <button id="refresh-weather" class="btn btn-outline-primary btn-sm mt-3" type="button">Обновить</button>
+            </aside>
+
+            <aside class="surface mb-4">
+                <h2 class="h5">Документы</h2>
+                <form method="post" action="{{ url_for('trips.upload_document', trip_id=trip.id) }}" enctype="multipart/form-data">
+                    <input class="form-control mb-2" name="document" type="file" accept=".pdf,.png,.jpg,.jpeg" required>
+                    <button class="btn btn-primary w-100" type="submit">Загрузить</button>
+                </form>
+                {% if trip.documents %}
+                    <hr>
+                    <div class="document-list">
+                        {% for document in trip.documents %}
+                            <div class="document-row">
+                                <a href="{{ url_for('trips.download_document', document_id=document.id) }}">{{ document.original_name }}</a>
+                                <form method="post" action="{{ url_for('trips.delete_document', document_id=document.id) }}">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">x</button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </aside>
+
+            <aside class="surface">
+                <h2 class="h5">Общий доступ</h2>
+                <p class="small text-muted">Друг сможет открыть поездку без редактирования.</p>
+                <input class="form-control mb-2" value="{{ share_url }}" readonly>
+                <a class="btn btn-outline-secondary w-100" href="{{ share_url }}" target="_blank">Открыть ссылку</a>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/trip_detail.js') }}"></script>
+{% endblock %}
