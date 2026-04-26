@@ -1,7 +1,6 @@
 from io import BytesIO
 from pathlib import Path
 
-
 def _register_font():
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
@@ -16,19 +15,13 @@ def _register_font():
             return 'TripPlannerFont'
     return 'Helvetica'
 
-
 def generate_trip_pdf(trip, weather=None):
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import cm
-    from reportlab.platypus import (
-        Paragraph,
-        SimpleDocTemplate,
-        Spacer,
-        Table,
-        TableStyle,
-    )
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
     buf = BytesIO()
     font = _register_font()
     st = getSampleStyleSheet()
@@ -79,12 +72,7 @@ def generate_trip_pdf(trip, weather=None):
         desc = weather['description']
         wind = weather['wind_speed']
         story.append(Paragraph('Погода', st['TripText']))
-        story.append(
-            Paragraph(
-                f'{city}: {temp} °C, {desc}, ветер {wind} м/с',
-                st['TripText'],
-            )
-        )
+        story.append(Paragraph(f'{city}: {temp} °C, {desc}, ветер {wind} м/с', st['TripText']))
         story.append(Spacer(1, 12))
     rows = [['Готово', 'Пункт']]
     for item in trip.checklist_items:
