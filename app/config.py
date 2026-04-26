@@ -1,11 +1,9 @@
 import os
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / 'instance' / 'tripplanner.sqlite3'
 ENV_PATH = BASE_DIR / '.env'
-
 
 def load_env():
     if not ENV_PATH.exists():
@@ -17,9 +15,7 @@ def load_env():
         key, val = line.split('=', 1)
         os.environ.setdefault(key.strip(), val.strip().strip('\''))
 
-
 load_env()
-
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-tripplanner-secret-xxxxxxxxx')
