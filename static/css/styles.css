@@ -141,8 +141,8 @@ footer {
 
 .route-line {
     height: 3px;
-    background: linear-gradient(90deg, var(--teal), var(--coral), var(--sun));
     margin: 20px 0;
+    background: linear-gradient(90deg, var(--teal), var(--coral), var(--sun));
 }
 
 .route-item {
@@ -159,8 +159,8 @@ footer {
 
 .route-weather {
     border-radius: 8px;
-    background: var(--warn-bg);
     padding: 14px;
+    background: var(--warn-bg);
     font-weight: 700;
 }
 
@@ -172,16 +172,8 @@ footer {
 .share-box {
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: var(--surface);
-}
-
-.feat,
-.surface,
-.trip-card,
-.note-tile,
-.empty,
-.share-box {
     padding: 22px;
+    background: var(--surface);
 }
 
 .feat {
