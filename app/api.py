@@ -1,19 +1,16 @@
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
-
 from .extensions import db
 from .models import ChecklistItem, Note, Trip
 from .weather import get_weather_for_city
 
 api_bp = Blueprint('api', __name__)
 
-
 def _trip_or_404(trip_id):
     trip = db.get_or_404(Trip, trip_id)
     if trip.owner_id != current_user.id:
         return None
     return trip
-
 
 @api_bp.get('/trips')
 @login_required
@@ -25,7 +22,6 @@ def trips_list():
     )
     return jsonify([trip.to_dict(private=True) for trip in trips])
 
-
 @api_bp.get('/trips/<int:trip_id>')
 @login_required
 def trip_detail(trip_id):
@@ -33,7 +29,6 @@ def trip_detail(trip_id):
     if trip is None:
         return jsonify({'error': 'Нет доступа к этой поездке'}), 403
     return jsonify(trip.to_dict(private=True, nested=True))
-
 
 @api_bp.post('/trips/<int:trip_id>/checklist')
 @login_required
@@ -50,7 +45,6 @@ def add_checklist_item(trip_id):
     db.session.commit()
     return jsonify(item.to_dict()), 201
 
-
 @api_bp.patch('/checklist/<int:item_id>')
 @login_required
 def toggle_checklist_item(item_id):
@@ -62,7 +56,6 @@ def toggle_checklist_item(item_id):
     db.session.commit()
     return jsonify(item.to_dict())
 
-
 @api_bp.delete('/checklist/<int:item_id>')
 @login_required
 def delete_checklist_item(item_id):
@@ -72,7 +65,6 @@ def delete_checklist_item(item_id):
     db.session.delete(item)
     db.session.commit()
     return jsonify({'status': 'deleted'})
-
 
 @api_bp.post('/trips/<int:trip_id>/notes')
 @login_required
@@ -90,7 +82,6 @@ def add_note(trip_id):
     db.session.commit()
     return jsonify(note.to_dict()), 201
 
-
 @api_bp.delete('/notes/<int:note_id>')
 @login_required
 def delete_note(note_id):
@@ -100,7 +91,6 @@ def delete_note(note_id):
     db.session.delete(note)
     db.session.commit()
     return jsonify({'status': 'deleted'})
-
 
 @api_bp.get('/weather')
 @login_required
