@@ -23,10 +23,8 @@ def create_app(config_class=Config):
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.get(User, int(user_id))
-
     from .routes import main_bp, auth_bp, trip_bp
     from .api import api_bp
-
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(trip_bp)
