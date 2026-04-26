@@ -1,7 +1,6 @@
 from flask import current_app
 import requests
 
-
 def _empty_weather(city, message):
     return {
         'ok': False,
@@ -11,7 +10,6 @@ def _empty_weather(city, message):
         'description': None,
         'wind_speed': None,
     }
-
 
 def get_weather_for_city(city):
     key = current_app.config.get('WEATHER_API_KEY')
